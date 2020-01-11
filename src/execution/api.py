@@ -258,30 +258,10 @@ def register_agent(msg):
                     response['status'] = sim_response['status']
                     response['message'] = sim_response['message']
             else:
-                sim_response = requests.post(f'http://{base_url}:{simulation_port}/register_agent',
-                                             json={'token': message, 'secret': secret}).json()
-
-                if sim_response['status'] == 1:
-                    Logger.normal('Agent socket connected.')
-
-                    response['status'] = 1
-                    response['result'] = True
-                    response['message'] = 'Agent successfully connected.'
-
-                    response.update(sim_response)
-
-                    if controller.agents_amount == len(controller.manager.agents_sockets_manager.get_tokens()):
-                        every_agent_registered.put(True)
-
-                    one_agent_registered_queue.put(True)
-
-                    send_initial_percepts(message, response)
-
-                else:
-                    Logger.error(f'Error to connect the agent socket: {message}')
-
-                    response['status'] = sim_response['status']
-                    response['message'] = sim_response['message']
+                ##==========================================================================================================
+                ## TODO
+                ##==========================================================================================================
+                pass
 
         except requests.exceptions.ConnectionError:
             response['status'] = 6
@@ -364,20 +344,10 @@ def finish_step():
                 multiprocessing.Process(target=step_controller, args=(actions_queue, 1), daemon=True).start()
 
         else:
-            controller.set_processing_actions()
-            notify_monitor(percepts_event, sim_response)
-
-            if sim_response['status'] == 2:
-                Logger.normal('Open connections for the social assets.')
-
-                controller.asset_request_manager.start_new_asset_request(sim_response)
-                multiprocessing.Process(target=step_controller, args=(request_queue, 2), daemon=True).start()
-
-            else:
-                notify_actors(percepts_event, sim_response)
-                Logger.normal('Wait all the agent send yours actions.')
-
-                multiprocessing.Process(target=step_controller, args=(actions_queue, 1), daemon=True).start()
+            ##==========================================================================================================
+            ## TODO
+            ##==========================================================================================================
+            pass
 
     except requests.exceptions.ConnectionError:
         Logger.critical('Error to process the agents actions.')
@@ -589,60 +559,19 @@ def notify_actors(event, response):
 
     Logger.normal('Notifying the agents.')
 
-    tokens = [*controller.manager.agents_sockets_manager.get_tokens(), *controller.manager.assets_sockets_manager.get_tokens()]
-    room_response_list = []
-
-    for token in tokens:
-        if event == initial_percepts_event:
-            info = json_formatter.initial_percepts_format(response, token)
-
-        elif event == percepts_event:
-            info = json_formatter.percepts_format(response, token)
-
-        elif event == end_event:
-            info = json_formatter.end_format(response, token)
-
-        elif event == bye_event:
-            info = json_formatter.bye_format(response, token)
-
-        else:
-            Logger.error('Wrong event name. Possible internal errors.')
-            info = json_formatter.event_error_format('Error in API.')
-
-        room = controller.manager.get(token, 'socket')
-        room_response_list.append((room, json.dumps(info)))
-
-    for room, agent_response in room_response_list:
-        socket.emit(event, agent_response, room=room)
+    #==========================================================================================================
+    ## TODO
+    ##==========================================================================================================
+    pass
         
 
 @app.route('/call_service', methods=['GET'])
 def calculate_route():
     """Send a request for the simulator to calculate a route between the coord given."""
-
-    response = {'status': 0, 'result': False, 'message': ''}
-
-    if not controller.simulation_started():
-        response['message'] = 'The simulator has not started yet.'
-
-    else:
-        status, message = controller.check_service_request(request)
-
-        if status == 1:
-            # Can be add more types of services
-            sim_response = requests.get(f'http://{base_url}:{simulation_port}/calculate_route',
-                                        json={'parameters': request.get_json(force=True)['parameters'], 'secret': secret}).json()
-
-            if sim_response['status'] == 1:
-                response['status'] = 1
-                response['result'] = True
-                response['response'] = sim_response['response']
-            else:
-                response['message'] = sim_response['message']
-        else:
-            response['message'] = message
-
-    return jsonify(response)
+    #==========================================================================================================
+    ## TODO
+    ##==========================================================================================================
+    pass
 
 
 @app.route('/terminate', methods=['GET'])

@@ -2,7 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0f115ece-2b46-4efe-b166-556b10856827" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/exercicios/ExerciciosSimulador.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_3.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_4.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_5.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_6_1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_6_2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_7_1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_7_2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_8.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exercicios/resposta_9.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/execution/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/execution/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/execution/communication/helpers/json_formatter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/execution/communication/helpers/json_formatter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/execution/monitor_engine/resources/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/execution/monitor_engine/resources/manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/execution/simulation_engine/generator/generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/execution/simulation_engine/generator/generator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/execution/simulation_engine/simulation_helpers/cycle.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/execution/simulation_engine/simulation_helpers/cycle.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,24 +38,30 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1OrtmDT7FDhnr6PNc4NMk1kjLRw" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/files" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/exercicios" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/exercicios" />
+      <recent name="$PROJECT_DIR$/files" />
+      <recent name="$PROJECT_DIR$/src/tests/unity/simulation" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/experiments" />
       <recent name="$PROJECT_DIR$/experiments/exp_scripts/util" />
       <recent name="$PROJECT_DIR$/experiments/scritps" />
       <recent name="$PROJECT_DIR$/src/execution/monitor_engine/helpers" />
       <recent name="$PROJECT_DIR$" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/files" />
-      <recent name="$PROJECT_DIR$/src/tests/unity/simulation" />
     </key>
   </component>
   <component name="RunManager" selected="Python.teste">
@@ -197,7 +219,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="7d6132a5-0aaa-46bb-8804-99d15cb223db" name="Default Changelist" comment="" />
+      <changelist id="0f115ece-2b46-4efe-b166-556b10856827" name="Default Changelist" comment="" />
       <created>1564677192263</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -217,6 +239,12 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1982" y="367" key="com.intellij.ide.util.TipDialog" timestamp="1578740399720">
+      <screen x="1366" y="0" width="1920" height="1080" />
+    </state>
+    <state x="1982" y="367" key="com.intellij.ide.util.TipDialog/67.27.1299.741/1366.0.1920.1080@1366.0.1920.1080" timestamp="1578740399720" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

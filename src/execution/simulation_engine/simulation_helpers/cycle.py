@@ -51,30 +51,10 @@ class Cycle:
         self.match_history = []
 
     def restart(self, config, load_sim, write_sim):
-        self.map.restart(config['map']['maps'][0], config['map']['proximity'], config['map']['movementRestrictions'])
-
-        if load_sim:
-            generator = Loader(config)
-        else:
-            generator = Generator(config, self.map)
-
-        self.steps = generator.generate_events()
-        self.social_assets_manager = SocialAssetsManager(config['map'], config['socialAssets'],
-                                                         generator.generate_social_assets())
-
-        if write_sim:
-            self.write_match(generator, self.sim_file)
-
-        self.map_percepts = config['map']
-        self.max_floods = generator.flood_id
-        self.max_victims = generator.victim_id
-        self.max_photos = generator.photo_id
-        self.max_water_samples = generator.water_sample_id
-        self.delivered_items = []
-        self.current_step = 0
-        self.max_steps = config['map']['steps']
-        self.cdm_location = (config['map']['maps'][0]['centerLat'], config['map']['maps'][0]['centerLon'])
-        self.agents_manager.restart(config['agents'], self.cdm_location)
+        ##==========================================================================================================
+        ## TODO
+        ##==========================================================================================================
+        pass
 
     def write_first_match(self, config, generator, file_name):
         config_copy = copy.deepcopy(config)
@@ -278,24 +258,10 @@ class Cycle:
 
         action_results = []
         for token_action_param in token_action_dict:
-            token, action, parameters = token_action_param.values()
-
-            if action in special_actions:
-                special_action_tokens.append([token, action, parameters])
-                continue
-
-            if token in agents_tokens:
-                result = self._execute_agent_action(token, action, parameters)
-
-                if action in requests_action and not result['message']:
-                    requests.append(token)
-
-                action_results.append(result)
-                agents_tokens.remove(token)
-
-            else:
-                action_results.append(self._execute_asset_action(token, action, parameters))
-                assets_tokens.remove(token)
+            # ==========================================================================================================
+            ## TODO
+            ##==========================================================================================================
+            pass
 
         while special_action_tokens:
             token, action, param = special_action_tokens.pop(0)
@@ -390,39 +356,10 @@ class Cycle:
                     raise FailedWrongParam('More or less than 1 parameter was given.')
 
             elif action_name == 'getCarried':
-                if len(parameters) == 1:
-                    match = None
-                    for sub_token, sub_action, sub_param in special_action_tokens:
-                        if len(sub_param) == 1:
-                            if sub_token == parameters[0] and sub_action == 'carry' and sub_param[0] == token:
-                                match = [sub_token, sub_action, sub_param]
-                                break
-
-                    if match is not None:
-                        special_action_tokens.remove(match)
-                        if self.agents_manager.get(parameters[0]) is not None:
-                            self.agents_manager.add_physical(parameters[0],
-                                                             self.agents_manager.get(token))
-                            self.agents_manager.edit(parameters[0], 'last_action_result', 'success')
-                            self.agents_manager.edit(parameters[0], 'last_action', 'carry')
-                            secondary_result = {
-                                'agent': self.agents_manager.get(parameters[0]),
-                                'message': ''
-                            }
-                        else:
-                            self.social_assets_manager.add_physical(parameters[0],
-                                                                    self.agents_manager.get(token))
-                            self.agents_manager.edit(parameters[0], 'last_action_result', 'success')
-                            self.agents_manager.edit(parameters[0], 'last_action', 'getCarried')
-                            secondary_result = {
-                                'social_asset': self.social_assets_manager.get(parameters[0]),
-                                'message': ''
-                            }
-                    else:
-                        raise FailedNoMatch('No other agent or social asset wants to carry.')
-
-                else:
-                    raise FailedWrongParam('More or less than 1 parameter was given.')
+                ## ==========================================================================================================
+                ## TODO
+                ## ==========================================================================================================
+                pass
 
             elif action_name == 'deliverPhysical':
                 if len(parameters) == 3:

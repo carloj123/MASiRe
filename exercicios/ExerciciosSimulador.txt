@@ -1,0 +1,179 @@
+======================================================================================================
+=======================================   RESUMO   ===================================================
+======================================================================================================
+
+Simulador:
+
+-> Inicialização dos processos (Pasta /src/startup):
+
+A inicialização do simulador está dividida em 4 partes:
+
+--> Configuração do ambiente (environment_handler.py):
+	. Todas as dependencias para executar o codigo são resolvidas, como bibliotecas, versão do python, etc.
+
+--> Validação do arquivo de configuração (configuration_checker.py):
+	. A validação é feita em cada categoria do arquivo de configuração (files/config.json), assim como a validação dos intervalos dos valores definidos. Exemplo: velocidade negativa em um tipo de agente gera uma mensagem de erro.
+
+--> Validação dos arqumentos informados para o simulador (arguments_parser):
+	. Aqui, todos os parametros '-param' informado na inicialização do sistema é validado com os valores inseridos ou como os padrões definidos.
+
+--> Inicialização dos processos (thread_starter.py):
+	. Os 3 processos (Simulador, API, Monitor) são iniciados, junto com seus argumentos.
+
+
+-> Inicialização individual de cada processo (Pasta /src/execution):
+
+--> Simulação (Pasta /src/execution):
+	. A simulação está dividido em niveis:
+
+	1) Json Formatter: Responsável em formatar os dados recebidos dos niveis inferiores para o processo Simulação;
+	2) Copycat: Responsável por retornar copias dos dados da simulação para o formatador, afim de não gerar alterações;
+	3) Simulacao (/src/execution/simulation_engine): Responsável por realizar o ciclos da simulação, ativando passos, processando ações, etc. OBS: Aqui é utilizado os arquivos da pasta /src/execution/simulation_helpers;
+	4) Gerenciadores de agentes e ativos sociais: Responsáveis por gerenciar as instancias dos agents e a modificação dos seus estados.	
+	
+	OBS: Geração dos Eventos:
+		. O arquivo generator.py possui todas as rotinas para gerar os eventos ou carrega-los de algum arquivo.
+
+	. Após a simulação iniciar todas as suas variáveis, um requisição https post é feita para a API, iniciando o ciclo de conexões dos agentes.
+
+	OBS: Todas as mensagens trocadas de Simulação e API possuem um atributo 'secret', para evitar que requisições de terceiros interfiram na simulação. 
+--> API:
+	. Inicia o socket para se comunicar com os agentes.
+
+--> Monitor:
+	. Entre em um loop até conseguir as informações da simulação por requisições para API.
+	. Todas as requisições POST são feitas pela API, para armazenar os dados da simulação. Os GET, pela parte do html/javascript, hospedado no flask.
+
+-> Conexão dos agentes:
+	. Essa conexão ocorre em duas etapas:
+	1) Conexão do Agente:
+		- O Agente envia seus dados, que são armazenados e um token é gerado com essa informação e eviado de volta.
+	2) Registro do Agente:
+		- Caso o token sejá válido, um agente é instanciado na simulação e a SID da request feita é armazenada. Essa SID será utilizada para enviar as percepções para esse agente em expecifico. Como retorno, o agente recebe as informações do mapa e de si próprio.
+
+-> Conexão dos ativos sociais:
+	. O Ativo social se conecta da mesma forma, porém, precisa enviar 3 coisas na conexão:
+		- O token que o requisitou;
+		- O passo em que a requisição foi feita;
+		- Dados próprios;
+	
+-> Ciclo de simulação:
+	. Assim aque todos os agentes se conectaram, ou por tempo limite atingido, o ciclo de simualção é iniciada;
+	. As percepções do ambiente são enviadas para os agentes e a API espera todos enviarem suas ações.
+	. API envia as ações para o simulador;
+	. Recebe os resultados e um STATUS:
+		0 = Um erro aconteceu na simulação e o simulador é desligado
+		1 = Passo processado com sucesso, retorna os resultados
+		2 = Requisição de ativo social solicitada:
+			. A API Espera o ativo social se conectar
+			. Formata os resultados e os retorna
+
+	. IMPORTANTE: Método de espera da API.
+		. A API possue uma variável do tipo Fila assincrona.
+		. Para esperar por um certo tempo, uma operação de get é feita na fila, colocando um timeout para a ação.
+
+--> Simulação:
+	. As ações são validadas antes de serem executadas.
+	. As ações envonvendo agentes como alvo são consideradas Ações Especiais e são processadas separadamente.
+		. A ação de requisição de um ativo social é a mais complexa:
+			. Primeiro é feita as validações (Se existe o ativo social, se ele esta ativo, etc)
+			. Identificado o ativo, o marcador (Representa apenas as informações relevantes para o agente que realizou a chamada) do ativo social é inserido no gerenciador de assets
+			. Quando os resultados das ações retornam para a simulação, é identificado um número x de chamadas de ativos sociais.
+			. Se esse número é maior que zero, a API recebe o status = 2 e começa a aceitar as conexões dos assets
+			. Ao final das conexões, os ativos que não se conectaram são informados pela API para as Simulação, retirando os marcadores e os ativado.
+			. Finalmente, todas as mensagens são processadas e enviadas para os seus respectivos agentes.
+	. Quando uma partida acaba, a simulação verifica se há mais mapas para gerar:
+		Se sim, uma nova instancia dos eventos são gerados e os ativos sociais são resetados.
+		Caso contrário, a simualção gera um arquivo de Log e finaliza sua execução.
+
+======================================================================================================
+=======================================   TAREFAS   ==================================================
+======================================================================================================
+
+OBS: O arquivo Json formatter captura todas as Exception recebidas da simulação e as formata. 
+	     Insira o código abaixo após cada 'except' no JsonFormatter para receber as exceções completas
+	     Código: 	import traceback
+			traceback.print_exc()
+
+	1) Adicionar um novo parametro em qualquer processo e acessá-lo na classe principal
+	2) Implementar a rotina que gera todos os eventos(generate_events(), arquivo generator.py) e retorna a lista de passos da simulação
+		. LEMBRETE:
+			. A ativação dos passos está implementada com base no passo formatado assim:
+			{				
+				['event'] = ...,
+				['victims'] = ...,
+				['soil_samples'] = ...,
+				['photos'] = ...,
+				['propagation'] = ...
+			}
+			. A cada ciclo de simulação, a lista de passos é iterada e os eventos ativos são atualizados
+	
+
+	3) Implementar o bloco de código de registro de um agente na simulação. Arquivo api.py, 
+rotina register_agent(msg).
+		. IMPORTANTE:
+			. Depois de validado a requisição, envie o token e o secret(método de sgurança da simulação) para a rota '/register_agent' do simulador, semelhante ao do ativo social.
+			. Receba e trate as informações da simulação.
+			 Padrão de mensagem de retorno da Simulaçao: {status, message, map_percpets, agents}
+			.Padrão de mensagem de retorno da API: {status, result, message}
+			. Você terá que utilizar as variáveis queue da api para controlar o fluxo de conexões dos agentes
+			. A cada registro, deve ser verificado se a quantidade de agentes a serem conectados já foi atingida. a variável 'controller' possui essa informação.
+			. Antes de retornar a mensagem HTTP, envia as percepções iniciais via socket (rotina send_initial_percepts(message, reponse))
+
+
+	4) Implemente o bloco de código que inicia o próximo ciclo da simulação: arquivo api.py, rotina finish_step()
+		IMPORTANTE:
+			. O bloco deve trocar o status 'processando ações' para falso. Olhar blocos acima
+			. Deve notificar o monitor dos resultados das ações
+			. Deve verificar se o status = 2 (requisição de ativo social) e iniciar o ciclo
+				ou status = 1 (próximo ciclo da simulação) e iniciá-lo.
+
+
+	5) Implemente a rotina 'restart', que instancia novos eventos e grava a configuração gerada (ou não), no arquivo cycle.py.
+		DICA:
+			. A rotina é semelhante ao start, porém, apenas os ativos sociais devem ser resetados, pois os agentes fixos continuam na simualçao
+
+
+	6.1) Implemente a rotina notify_actors(event, response) no arquivo api.py
+		IMPORTANTE:
+			. Você precisaram formatar as mensagens de TODOS os agentes e enviar para cada um expecifico.
+			. Para isso, utilize a SID salva nas conexões dos agente como ROOM (https://python-socketio.readthedocs.io/en/latest/server.html#rooms)
+			. Para formatar as mensagens, utilize o json_formatter
+
+	6.2) Implemente a rotina de get(self, match, id_attibute) da class MatchInfoManager, arquivo src/execution/monitor/engine/resources/manager.py.
+		DICA:
+			. Essa rotina implementa o padrão REST
+			. Ela deve aceitar retornar as informações de 'report' e 'map'.
+			. Utilize como exemplo as rotinas acima
+
+	7.1) Implemente o bloco de código que executa apenas as ações normais dos agentes da rotina execute_actions(self, tokens_action_dict) do arquivo cycle.py
+		DICA:
+			. Ao identificar as ações especiais, adicione a lista special_action_tokens
+
+	7.2) Implemete a ação especial 'getCarried' da rotina _execute_agent_special_action(self, token, action_name, parameters, special_action_tokens) do arquivo cycle.py
+
+
+	8) Implemente a rotina de formatação das percepções percepts_format(response, token) no arquivo src/execution/communication/helpers/json_formatter.py
+		DICA:
+			. Retorne a mensagem no formato {type, environment, agent, message}
+			. response['actors'] pode ter 'agent' e 'asset', trate isso
+
+	9) Implemente a rotina de que disponibiliza os serviços da simulação calculate_route() no arquivo api.py:
+		DICA:
+			. Utilize o mesmo padrão de validação das rotinas acima
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
