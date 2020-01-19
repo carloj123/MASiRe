@@ -127,9 +127,9 @@ class Starter:
     @staticmethod
     def start_simulation(module_path, simulation_arguments, venv_path, python_version):
         """Start the Simulation by command line."""
-
+        print(simulation_arguments)
         subprocess.call([f'{str(venv_path)}python{python_version}', module_path, *map(str, simulation_arguments)])
-
+        
     @staticmethod
     def start_api(module_path, api_arguments, venv_path, python_version):
         """Start the API by command line."""

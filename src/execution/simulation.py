@@ -15,7 +15,7 @@ from werkzeug.serving import run_simple
 from simulation_engine.json_formatter import JsonFormatter
 from communication.helpers.logger import Logger
 
-config_path, base_url, simulation_port, api_port, log, load_sim, write_sim, secret = sys.argv[1:]
+config_path, base_url, simulation_port, api_port, log, load_sim, write_sim, exe1,secret = sys.argv[1:]
 load_sim_bool = load_sim.lower() == 'true'
 write_sim_bool = write_sim.lower() == 'true'
 
@@ -210,6 +210,8 @@ if __name__ == '__main__':
     app.debug = False
     app.config['SECRET_KEY'] = secret
     app.config['JSON_SORT_KEYS'] = False
+
+    Logger.normal(exe1)
 
     CORS(app)
     try:

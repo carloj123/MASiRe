@@ -32,7 +32,9 @@ class Parser:
         self.parser.add_argument('-sa_timeout', required=False, type=int, default=5)
         self.parser.add_argument('-load_sim', required=False, type=bool, default=False)
         self.parser.add_argument('-write_sim', required=False, type=bool, default=False)
+        self.parser.add_argument('-exe1', required=False, type=str, default='esse é o exe 1')
         self.parser.add_argument('-secret', required=False, type=str, default='')
+       
 
     def check_arguments(self):
         """Check all the arguments to prevent wrong format.
@@ -153,7 +155,7 @@ class Parser:
         if args.url == 'localhost':
             args.url = '127.0.0.1'
 
-        return [args.conf, args.url, args.sp, args.ap, args.log, args.load_sim, args.write_sim, secret]
+        return [args.conf, args.url, args.sp, args.ap, args.log, args.load_sim, args.write_sim, args.exe1, secret]
 
     def get_api_arguments(self):
         """Return all the arguments necessary for the API.

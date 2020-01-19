@@ -33,10 +33,18 @@ class Generator:
 
         :return list: All the steps containing either a dictionary with the event or a dictionary with a None flood."""
 
-        ##==========================================================================================================
-        ## TODO
-        ##==========================================================================================================
+        steps = self.general_map_variables['steps']
 
+        events: list = []
+        for step in range(1, steps):
+            eve: dict = {'flood':None,'victims':[],'water_samples':[],'photos':[],'propagation':[]}
+            print(f'evento para step: {step}')
+
+            if random.randint(0, 100) < self.generate_variables['flood']['probability']:
+                events.append(self.generate_flood())        
+                # posicionar galera nos nodos (ex. vitimas)
+
+        print(len(events))
         return []
 
     def generate_flood(self) -> Flood:

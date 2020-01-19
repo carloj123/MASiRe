@@ -88,6 +88,7 @@ class JsonFormatter:
         except Exception as e:
             response['message'] = f'An error occurred during connection: {str(e)}.'
             Logger.error(f'Unknown error: {str(e)}.')
+            traceback.print_exc()
 
             return response
 
